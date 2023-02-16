@@ -23,12 +23,12 @@ class Opcode
 
     private function getOpcodes()
     {
-        return __DIR__  . '/'. $this->version. '/Opcodes.php';
+        return __DIR__  . '/Versions/'. $this->version. '/Opcodes.php';
     }
 
     public function getStructures()
     {
-        return __DIR__  . '/'. $this->version. '/Structure.php';
+        return require __DIR__  . '/Versions/'. $this->version. '/Structure.php';
     }
 
     public function getStructure()

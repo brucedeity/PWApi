@@ -5,8 +5,8 @@ return [
         'channel' => 'byte',
         'emotion' => 'byte',
         'srcroleid' => 'int',
-        'msg' => 'octets',
+        'msg' => 'string',
         'data' => 'octets',
-        'destination' => 'gdeliveryd'
+        // 'destination' => 'gdeliveryd'
     ]
 ];

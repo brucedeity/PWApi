@@ -2,13 +2,14 @@
 
 namespace App\Service\Packets;
 
-class DataType
+class DataTypes
 {
     public static function getWriteMethod(string $dataType): ?string
     {
         $writeMethods = [
             'int' => 'WriteUInt32',
-            'octets' => 'WriteUInt32',
+            'octets' => 'WriteOctets',
+            'string' => 'WriteUString',
             'byte' => 'WriteUByte'
         ];
     
