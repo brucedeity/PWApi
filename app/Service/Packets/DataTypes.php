@@ -4,25 +4,14 @@ namespace App\Service\Packets;
 
 class DataType
 {
-    public function build(array $params) : array
+    public static function getWriteMethod(string $dataType): ?string
     {
-        $data = [];
-
-        foreach ($params as $key => $value) {
-            $this->getRespectiveMethod()
-        }
-
-        return $data;
-    }
-
-    private function getRespectiveMethod(string $key)
-    {
-        $types = [
+        $writeMethods = [
             'int' => 'WriteUInt32',
             'octets' => 'WriteUInt32',
             'byte' => 'WriteUByte'
         ];
-
-        return $types[$key] ?? NULL;
+    
+        return $writeMethods[$dataType] ?? null;
     }
 }

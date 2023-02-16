@@ -10,11 +10,6 @@ class VersionHandler
         $this->version = $version;
     }
 
-    public function getOpcodes()
-    {
-        return __DIR__  . '/'. $this->version. '/Opcodes.php';
-    }
-
     public function getStructure()
     {
         return __DIR__  . '/'. $this->version. '/Structure.php';

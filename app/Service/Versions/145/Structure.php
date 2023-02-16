@@ -6,6 +6,7 @@ return [
         'emotion' => 'byte',
         'srcroleid' => 'int',
         'msg' => 'octets',
-        'data' => 'octets'
+        'data' => 'octets',
+        'destination' => 'gdeliveryd'
     ]
 ];
