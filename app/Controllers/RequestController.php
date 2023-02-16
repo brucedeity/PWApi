@@ -5,21 +5,21 @@ namespace App\Controllers;
 use App\Service\Packets\WritePacket;
 use App\Service\Packets\DataTypes;
 use App\Service\ConfigHandler;
-use App\Service\Opcode;
+use App\Request;
 use App\Service\Versions\VersionHandler;
 
 class RequestController {
 
-    public function buildPacket(string $packetName, array $params = [])
+    public function buildPacket()
     {
-        $opcode = new Opcode($packetName, $params['server']['version']);
-
+        $request = new Request;
+        
         $packet = new WritePacket;
         
-        foreach ($opcode->getStructure() as $key => $value) {
-            // echo $this->getWriteMethod($value). ' = '. $this->getRequestValue($key). '<br/>';
+        foreach ($request->getOpcode()->getStructure() as $key => $value) {
+            // echo DataTypes::getWriteMethod($value). ' = '. $request->getPacketKey($key). '<br/>';
 
-            $packet->{DataTypes::getWriteMethod($value)}($params['packet'][$key]);
+            $packet->{DataTypes::getWriteMethod($value)}($request->getPacketKey($key));
         }
 
         $packet->Pack(0x78);
