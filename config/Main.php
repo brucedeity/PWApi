@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'version' => '145',
     'host' => 'localhost',
     'ports' => [
         'gamedbd' => 29400,
