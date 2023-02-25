@@ -69,11 +69,6 @@ class Request
         return empty($_GET) ? $_POST : $_GET;
     }
 
-    public function getPacketResponseName()
-    {
-        return substr_replace($this->getPacketName(), 'Res', -3);
-    }
-
     public function buildPacketStructure()
     {
         $this->packet = new PacketStructure($this->getPacketName(), $this->get('version'));
