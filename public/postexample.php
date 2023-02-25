@@ -49,7 +49,7 @@ if ($httpCode >= 400) {
 }
 
 // Print the response
-print_r($response);
+echo $response;
 
 // Close the cURL session
 curl_close($ch);

@@ -20,21 +20,28 @@ class RequestController {
 
     public function buildPacket()
     {
-        // return $this->request->verifyToken();
-        
         if (!$this->request->verifyToken()) return 'The given token is invalid.';
 
-        $packetStructure = $this->request->buildPacketStructure();
+        $packet = $this->request->buildPacketStructure();
 
         $writePacket = new WritePacket;
         
-        foreach ($packetStructure as $key => $value) {
-            echo DataTypes::getWriteMethod($value). ' = '. $this->request->getPacketKey($key). '<br/>';
+        foreach ($packet->getDataType() as $key => $value) {
+            // echo DataTypes::getWriteMethod($value). ' = '. $this->request->getPacketKey($key). '<br/>';
+
+            // $data[DataTypes::getWriteMethod($value)] = $this->request->getPacketKey($key);
 
             $writePacket->{DataTypes::getWriteMethod($value)}($this->request->getPacketKey($key));
         }
 
-        $writePacket->Pack($packetStructure->getOpcode());
+        $writePacket->Pack($packet->getOpcode());
         $writePacket->Send($this->request->get('host'), $this->request->get('destinationPort'));
+
+        if ($packet->needsResponse()) return $this->readPacket($writePacket);
+    }
+
+    public function readPacket(WritePacket $writtenPacket)
+    {
+        return $writtenPacket;
     }
 }

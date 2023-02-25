@@ -21,14 +21,14 @@ class PacketStructure
         $this->structure = $this->getStructure();
     }
 
-    private function getStructures()
+    public function getDataType()
     {
-        return require __DIR__  . '/Versions/'. $this->version. '/Structure.php';
+        return array_diff_key($this->structure, ['info' => true]);
     }
 
-    public function getStructure()
+    private function getStructure()
     {
-        return $this->getStructures()[$this->packetName] ?? [];
+        return require __DIR__  . '/Versions/'. $this->version. '/' . $this->packetName. '.php';
     }
 
     public function getOpcode()
@@ -39,5 +39,14 @@ class PacketStructure
     public function getDestination()
     {
         return $this->structure['info']['destination'];
+    }
+
+    public function needsResponse() : bool
+    {
+        if (!array_key_exists('needs_response', $this->structure)) return false;
+
+        if (!$this->structure['needs_response']) return false;
+
+        return true;
     }
 }

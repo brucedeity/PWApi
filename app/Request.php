@@ -7,7 +7,7 @@ use App\Service\PacketStructure;
 
 class Request
 {
-    private $packetStructure;
+    private $packet;
 
     private $request;
 
@@ -17,7 +17,7 @@ class Request
     {
         $this->request = $this->getRequest();
 
-        $this->packetStructure = $this->buildPacketStructure();
+        $this->packet = $this->buildPacketStructure();
 
         $this->config = new Config;
     }
@@ -64,14 +64,9 @@ class Request
         return $this->getPacketData()[$key] ?? NULL;
     }
 
-    private function getRequest()
+    public function getRequest()
     {
         return empty($_GET) ? $_POST : $_GET;
-    }
-
-    public function needsResponse()
-    {
-        return substr($this->getPacketName(), -3) == 'Arg';
     }
 
     public function getPacketResponseName()
@@ -81,9 +76,9 @@ class Request
 
     public function buildPacketStructure()
     {
-        $this->packetStructure = new PacketStructure($this->getPacketName(), $this->get('version'));
+        $this->packet = new PacketStructure($this->getPacketName(), $this->get('version'));
 
-        return $this->packetStructure;
+        return $this->packet;
     }
 
     public function getPort(string $destination) : int
@@ -93,7 +88,7 @@ class Request
 
     public function getDestinationPort()
     {
-        return $this->getPort($this->packetStructure->getDestination());;
+        return $this->getPort($this->packet->getDestination());;
     }
 
     public function verifyToken()

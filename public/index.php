@@ -11,4 +11,4 @@ use App\Controllers\RequestController;
 $controller = new RequestController();
 $response = $controller->buildPacket();
 
-print_r($response);
+echo json_encode($response);
