@@ -3,30 +3,55 @@
 namespace App;
 
 use App\Config;
-use App\Service\Opcode;
+use App\Service\PacketStructure;
 
 class Request
 {
-    private $requestType;
-    private $opcode;
+    private $packetStructure;
+
+    private $request;
+
+    private $config;
 
     public function __construct()
     {
         $this->request = $this->getRequest();
 
-        $this->opcode = $this->buildOpcode();
+        $this->packetStructure = $this->buildPacketStructure();
+
+        $this->config = new Config;
     }
 
     public function get(string $key)
     {
-        $data = $this->request[$key] ?? NULL;
+        $method = 'get'.$key;
 
-        return !is_null($data) ? $data : (new Config)->{'get'.$key}();
+        return $this->{$method}() ?? $this->config->{$method}();
+    }
+
+    public function getHost()
+    {
+        return $this->request['server']['host'];
+    }
+
+    public function getVersion()
+    {
+        return $this->request['server']['version'];
     }
 
     public function getPacketName()
     {
         return $this->request['packet']['name'];
+    }
+
+    public function getPacketDestination()
+    {
+        return $this->getPacketData();
+    }
+
+    public function getServerPorts()
+    {
+        return $this->request['server']['ports'];
     }
 
     public function getPacketData()
@@ -44,13 +69,35 @@ class Request
         return empty($_GET) ? $_POST : $_GET;
     }
 
-    private function buildOpcode()
+    public function needsResponse()
     {
-        return new Opcode($this->getPacketName(), $this->get('version'));
+        return substr($this->getPacketName(), -3) == 'Arg';
     }
 
-    public function getOpcode()
+    public function getPacketResponseName()
     {
-        return $this->opcode;
+        return substr_replace($this->getPacketName(), 'Res', -3);
+    }
+
+    public function buildPacketStructure()
+    {
+        $this->packetStructure = new PacketStructure($this->getPacketName(), $this->get('version'));
+
+        return $this->packetStructure;
+    }
+
+    public function getPort(string $destination) : int
+    {
+        return $this->getServerPorts()[$destination] ?? 0;
+    }
+
+    public function getDestinationPort()
+    {
+        return $this->getPort($this->packetStructure->getDestination());;
+    }
+
+    public function verifyToken()
+    {
+        return $this->request['token'] == $this->config->getToken();
     }
 }

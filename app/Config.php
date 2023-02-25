@@ -9,7 +9,7 @@ class Config
     public function __construct()
     {
         $this->data = [
-            'token' => '123',
+            'token' => 'Fvu3ZM7SjYHyXNw5Jyyj59k9S4T',
             'version' => '145',
             'host' => 'localhost',
             'ports' => [

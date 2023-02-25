@@ -10,19 +10,31 @@ use App\Service\Versions\VersionHandler;
 
 class RequestController {
 
+    private $request;
+    private $sendedData;
+
+    public function __construct()
+    {
+        $this->request = new Request;
+    }
+
     public function buildPacket()
     {
-        $request = new Request;
+        // return $this->request->verifyToken();
         
-        $packet = new WritePacket;
-        
-        foreach ($request->getOpcode()->getStructure() as $key => $value) {
-            // echo DataTypes::getWriteMethod($value). ' = '. $request->getPacketKey($key). '<br/>';
+        if (!$this->request->verifyToken()) return 'The given token is invalid.';
 
-            $packet->{DataTypes::getWriteMethod($value)}($request->getPacketKey($key));
+        $packetStructure = $this->request->buildPacketStructure();
+
+        $writePacket = new WritePacket;
+        
+        foreach ($packetStructure as $key => $value) {
+            echo DataTypes::getWriteMethod($value). ' = '. $this->request->getPacketKey($key). '<br/>';
+
+            $writePacket->{DataTypes::getWriteMethod($value)}($this->request->getPacketKey($key));
         }
 
-        $packet->Pack(0x78);
-        $packet->Send('127.0.0.1', 29300);
+        $writePacket->Pack($packetStructure->getOpcode());
+        $writePacket->Send($this->request->get('host'), $this->request->get('destinationPort'));
     }
 }
